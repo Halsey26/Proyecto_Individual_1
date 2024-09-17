@@ -6,3 +6,5 @@ venv/
 API_prueba.ipynb
 
 prueba.py
+
+datasets/*.csv
