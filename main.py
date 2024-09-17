@@ -4,7 +4,7 @@ import pandas as pd
 app = FastAPI()
 
 #lectura del archivo movie
-movie_api = pd.read_parquet('../datasets/movie_dataset_final.parquet', engine= 'pyarrow')
+movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine= 'pyarrow')
 
     # X cantidad de películas fueron estrenadas en el mes de 
 def f_filmaciones_mes(df, mes, column):
