@@ -5,12 +5,12 @@ app = FastAPI()
 
 #lectura del archivos movie y credits
 movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine= 'pyarrow')
-credits_cast_api = pd.read_parquet('/datasets/credits_cast.parquet', engine= 'pyarrow')
-credits_crew_api = pd.read_parquet('/datasets/credits_crew.parquet', engine= 'pyarrow')
+# credits_cast_api = pd.read_parquet('datasets/credits_cast.parquet', engine= 'pyarrow')
+# credits_crew_api = pd.read_parquet('datasets/credits_crew.parquet', engine= 'pyarrow')
 
 # Para funciones con credits_cast y crew
-movie_cast = pd.merge(movie_api, credits_cast_api, on ='IdMovie')
-movie_crew = pd.merge(movie_api, credits_crew_api, on ='IdMovie')
+movie_cast =  pd.read_parquet('datasets/movie_cast.parquet', engine= 'pyarrow')
+movie_crew =  pd.read_parquet('datasets/movie_crew.parquet', engine= 'pyarrow')
 
 
 #FUNCIONES
