@@ -5,8 +5,10 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MultiLabelBinarizer
 
-movies_filt = pd.read_parquet('../datasets/movies_modelo.parquet')
+
+movies_filt = pd.read_parquet('datasets/movie_modelo.parquet')
 
 #PREPROCESAMIENTO
 # Convertir columna 'genres' de una cadena de texto a una lista
@@ -38,9 +40,9 @@ cosine_simi = cosine_similarity(features_df, features_df)
 def recomendacion(titulo, df):
 
     # Normalizar el título para la búsqueda
-    titulo = titulo.lower()
+    titulo = titulo.title()
 
-    titulo_row = df[df["title"].str.lower() == titulo ]
+    titulo_row = df[df["title"] == titulo ]
     
     # Se verifica si la película existe en la base de datos
     if titulo_row.empty:
@@ -50,7 +52,7 @@ def recomendacion(titulo, df):
     idx = titulo_row.index[0]
 
     # Obtengo los puntajes de similitud 
-    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = list(enumerate(cosine_simi[idx]))
 
     # Se ordena según la similitud de puntajes en orden descendente
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
@@ -66,5 +68,10 @@ def recomendacion(titulo, df):
     top_movies = df['title'].iloc[sim_indices[:5]].values.tolist()
 
     return top_movies
+
+titulo_pelicula = 'Toy Story'
+recomendaciones = recomendacion(titulo_pelicula, movies_filt)
+
+
 
 

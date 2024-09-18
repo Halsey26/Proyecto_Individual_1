@@ -16,7 +16,7 @@ movie_cast =  pd.read_parquet('datasets/movie_cast.parquet', engine= 'pyarrow')
 movie_crew =  pd.read_parquet('datasets/movie_crew.parquet', engine= 'pyarrow')
 
 #Para el modelo
-movies_filt= pd.read_parquet('datasets/movie_modelo.parquet', engine= 'pyarrow')
+movies_filt= pd.read_parquet('datasets/movie_modelo.parquet')
 
 
 #FUNCIONES
@@ -43,6 +43,8 @@ def f_filmaciones_dia(df,day,column ):
 
 def f_score_titulo( df, titulo ):
     #Filtra fila con el titulo de la pelicula
+    titulo=titulo.title()
+
     film_row = df[ df["title"] == titulo]
 
     if film_row.empty:
@@ -54,6 +56,8 @@ def f_score_titulo( df, titulo ):
     return f"La película '{titulo}' fue estrenada en el año {anio_estreno} con un score/popularidad de {score}"
 
 def f_votos_titulo( df, titulo ):
+
+    titulo=titulo.title()
     #Filtra fila con el titulo de la pelicula
     film_row = df[ df["title"] == titulo]
 
@@ -205,14 +209,12 @@ def Recomendacion(titulo:str):
     - Titulo de la película (str)
 
     Output:
-    - Nombre del director.
-    - Promedio Éxito.
-    - Lista de películas
+    - Lista de películas recomendadas
     """
     lista_movies= recomendacion(titulo, movies_filt)
 
     if lista_movies == 0: 
-        return JSONResponse(content={f"Error: Película '{titulo}' no encontrada en el dataset."})
+        return f"Error: Película '{titulo}' no encontrada en el dataset."
 
-    return JSONResponse(content={"Películas recomendadas": lista_movies})
+    return {"message":lista_movies}
 
