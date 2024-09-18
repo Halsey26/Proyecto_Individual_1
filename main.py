@@ -8,15 +8,13 @@ app = FastAPI()
 
 # Variables globales para los datasets, inicialmente vacías
 movie_api = None
-credits_cast_api = None
-credits_crew_api = None
 movie_cast = None
 movie_crew = None
 movies_filt = None
 
 # Función para cargar los datasets cuando sean necesarios
 def load_datasets():
-    global movie_api, credits_cast_api, credits_crew_api, movie_cast, movie_crew, movies_filt
+    global movie_api, movie_cast, movie_crew, movies_filt
     if movie_api is None:
         movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine='pyarrow')
     if movie_cast is None:
