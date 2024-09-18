@@ -8,3 +8,5 @@ API_prueba.ipynb
 prueba.py
 
 datasets/*.csv
+
+_pycache_/
