@@ -6,17 +6,25 @@ from Modelo.modelo_ML import recomendacion  # Importar la función de recomendac
 
 app = FastAPI()
 
-#lectura del archivos movie y credits
-movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine= 'pyarrow')
-# credits_cast_api = pd.read_parquet('datasets/credits_cast.parquet', engine= 'pyarrow')
-# credits_crew_api = pd.read_parquet('datasets/credits_crew.parquet', engine= 'pyarrow')
+# Variables globales para los datasets, inicialmente vacías
+movie_api = None
+credits_cast_api = None
+credits_crew_api = None
+movie_cast = None
+movie_crew = None
+movies_filt = None
 
-# Para funciones con credits_cast y crew
-movie_cast =  pd.read_parquet('datasets/movie_cast.parquet', engine= 'pyarrow')
-movie_crew =  pd.read_parquet('datasets/movie_crew.parquet', engine= 'pyarrow')
-
-#Para el modelo
-movies_filt= pd.read_parquet('datasets/movie_modelo.parquet')
+# Función para cargar los datasets cuando sean necesarios
+def load_datasets():
+    global movie_api, credits_cast_api, credits_crew_api, movie_cast, movie_crew, movies_filt
+    if movie_api is None:
+        movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine='pyarrow')
+    if movie_cast is None:
+        movie_cast = pd.read_parquet('datasets/movie_cast.parquet', engine='pyarrow')
+    if movie_crew is None:
+        movie_crew = pd.read_parquet('datasets/movie_crew.parquet', engine='pyarrow')
+    if movies_filt is None:
+        movies_filt = pd.read_parquet('datasets/movie_modelo.parquet')
 
 
 #FUNCIONES
@@ -124,7 +132,6 @@ def f_get_director(df, name):
             'Películas': dict_director
             }
 
-
 # API
 @app.get("/inicio")
 async def ruta_prueba():
@@ -139,7 +146,7 @@ def cantidad_filmaciones_mes(mes:str):
     Output:
     - Mensaje: 'X cantidad de películas fueron estrenadas en el mes de X.'
     """
-
+    load_datasets()
     return {"message":f_filmaciones_mes(movie_api,mes,'release_meses')}
 
 @app.get("/Cantidad_Filmacione_Dia/{dia}")
@@ -151,7 +158,7 @@ def cantidad_filmaciones_dia(dia:str):
     Output:
     - Mensaje: 'X cantidad de películas fueron estrenadas en los días X.'
     """
-
+    load_datasets()
     return {"message":f_filmaciones_dia(movie_api,dia,'release_date')}
 
 @app.get("/Score_Titulo/{titulo}")
@@ -163,7 +170,7 @@ def Score_Titulo(titulo:str):
     Output:
     - Mensaje: 'La película X fue estrenada en el año X con un score/popularidad de X.'
     """
-
+    load_datasets()
     return {"message":f_score_titulo(movie_api,titulo)}
 
 @app.get("/Votos_Titulo/{titulo}")
@@ -175,6 +182,7 @@ def Votos_Titulo(titulo:str):
     Output:
     - Mensaje: 'La película X fue estrenada en el año X. La misma cuenta con un total de X valoraciones, con un promedio de X'
     """
+    load_datasets()
     return {"message":f_votos_titulo(movie_api,titulo)}
 
 @app.get("/Get_Actor/{actor}")
@@ -186,6 +194,7 @@ def Get_Actor(actor:str):
     Output:
     - Mensaje: 'El actor X ha participado de X cantidad de filmaciones, el mismo ha conseguido un retorno de X con un promedio de X por filmación'
      """
+    load_datasets()
     return {"message":f_get_actor(movie_cast,actor)}
 
 @app.get("/Get_Director/{director}")
@@ -199,6 +208,7 @@ def Get_Director(director:str):
     - Promedio Éxito.
     - Lista de películas
      """
+    load_datasets()
     return {"message":f_get_director(movie_crew,director)}
 
 
@@ -211,6 +221,7 @@ def Recomendacion(titulo:str):
     Output:
     - Lista de películas recomendadas
     """
+    load_datasets()
     lista_movies= recomendacion(titulo, movies_filt)
 
     if lista_movies == 0: 
