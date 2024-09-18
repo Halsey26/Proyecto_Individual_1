@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from fastapi.responses import JSONResponse
+from Modelo.modelo_ML import recomendacion  # Importar la función de recomendación
+
 
 app = FastAPI()
 
@@ -11,6 +16,9 @@ movie_api = pd.read_parquet('datasets/movie_dataset_final.parquet', engine= 'pya
 # Para funciones con credits_cast y crew
 movie_cast =  pd.read_parquet('datasets/movie_cast.parquet', engine= 'pyarrow')
 movie_crew =  pd.read_parquet('datasets/movie_crew.parquet', engine= 'pyarrow')
+
+#Para el modelo
+movies_filt= pd.read_parquet('datasets/movies_modelo.parquet', engine= 'pyarrow')
 
 
 #FUNCIONES
@@ -191,4 +199,22 @@ def Get_Director(director:str):
      """
     return {"message":f_get_director(movie_crew,director)}
 
+
+@app.get("/Recomendacion/{titulo}")
+def Recomendacion(titulo:str):
+    """
+    Input:
+    - Titulo de la película (str)
+
+    Output:
+    - Nombre del director.
+    - Promedio Éxito.
+    - Lista de películas
+    """
+    lista_movies= recomendacion(titulo, movies_filt)
+
+    if lista_movies == 0: 
+        return JSONResponse(content={f"Error: Película '{titulo}' no encontrada en el dataset."})
+
+    return JSONResponse(content={"Películas recomendadas": lista_movies})
 
