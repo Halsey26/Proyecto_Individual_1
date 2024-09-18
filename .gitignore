@@ -10,3 +10,6 @@ prueba.py
 datasets/*.csv
 
 _pycache_/
+
+Modelo/_pycache_/
+Modelo/_init
