@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from fastapi.responses import JSONResponse
 from Modelo.modelo_ML import recomendacion  # Importar la función de recomendación
 
