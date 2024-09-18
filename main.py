@@ -18,7 +18,7 @@ movie_cast =  pd.read_parquet('datasets/movie_cast.parquet', engine= 'pyarrow')
 movie_crew =  pd.read_parquet('datasets/movie_crew.parquet', engine= 'pyarrow')
 
 #Para el modelo
-movies_filt= pd.read_parquet('datasets/movies_modelo.parquet', engine= 'pyarrow')
+movies_filt= pd.read_parquet('datasets/movie_modelo.parquet', engine= 'pyarrow')
 
 
 #FUNCIONES
